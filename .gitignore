@@ -1,5 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*/__pycache__/
+carbon_cli/__pycache__
 *.py[cod]
 *.pyo
 *.pyd

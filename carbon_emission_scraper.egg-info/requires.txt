@@ -1,8 +1,0 @@
-camelot-py[cv]>=1.0.9
-pandas>=1.4
-rich>=13
-httpx>=0.23
-pdfminer.six>=20201018
-PyPDF2>=3.0
-pydantic>=2.0
-typer>=0.7
