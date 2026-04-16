@@ -1,114 +1,53 @@
-# carbon-cli
+# Carbon CLI
 
-Estimate embedded CO₂e from chemical manufacturing, referencing the best available published emission factors.
+**Estimate the cradle-to-gate CO₂e emissions for chemicals using only best-available, referenced data sources.**
 
-## Features
-- **CLI Usage:**
-  - Command line: `carbon-cli "sodium azide" 50`
-  - Prompts interactively if arguments are missing
-
-- **Real Data Sources:**
-  - The ONLY data accepted in this tool comes from high-quality, referenced sources:
-    1. **Government LCA databases.** (e.g., European Commission Joint Research Centre ELCD, US EPA USEEIO, IPCC publications)
-    2. **Peer-reviewed academic LCA papers.** (e.g., ScienceDirect, Google Scholar, ResearchGate—search for "life cycle assessment X chemical emission factor")
-    3. **Industry sustainability reports.** (e.g., BASF/DSM product footprints, Dow, Yara, published product carbon footprints)
-  - No emission factor is used unless it has clear provenance and a verifiable source link/document reference.
-
-- **Normalization:**
-  - Name normalization (case, hyphens, whitespace)
-  - Emission factors accepted only as per kg (i.e., `kg_co2e_per_kg` or equivalent)
-
-- **Output:**
-  - Rich, structured table and CLI output: shows process, year, provenance, confidence, boundary, and all available metadata per result
-  - Calculation for user-supplied mass (g and kg)
-
-## How to Expand the Dataset
-- If the emission factor for your chemical is missing:
-  1. **Search for primary literature or databases** as above.
-  2. Extract the value from a table (with units), cite process, year, system boundary, and link (preferably DOI or PDF link).
-  3. Add a row to `data/emission_factors.csv` using:
-
-     `substance,factor,unit,process,year,source,reference_url,confidence,boundary`
-
-     For example:
-     `ammonia,1.95,kg_co2e_per_kg,Haber-Bosch,2020,LCA study,https://doi...,high,cradle-to-gate`
-
-## Installation & Setup
-
-### 1. Using uv (recommended for speed, Windows/Linux/macOS):
-
+## ⚡ Quick Start
+Install dependencies (recommended: `uv`, works with pip/poetry too):
 ```bash
-# Create a virtual environment
 uv venv
-# Install dependencies
 uv pip install -e .
 ```
 
-### 2. Using poetry (optional):
-
+**Run via CLI:**
 ```bash
-poetry install
+carbon-cli "CHEMICAL NAME" MASS_IN_GRAMS
+# Or just:
+carbon-cli
+# ...to run interactively (it will prompt you)
 ```
-
-### 3. Using pip directly:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate   # On Windows: .venv\Scripts\activate
-pip install -e .
-```
-
-### PDF table extraction (if using Camelot on Windows):
-- You **must** install Ghostscript and poppler utils. Instructions:
-    - [Ghostscript download](https://www.ghostscript.com/download/gsdnld.html)
-    - [Poppler for Windows](https://github.com/oschwartz10612/poppler-windows/releases/)
-    - Add both tools to your system PATH.
-
-### Troubleshooting
-- If PDF parsing fails, make sure Ghostscript and Poppler are correctly installed and available in your PATH.
-- For more, see the Camelot [Windows installation docs](https://camelot-py.readthedocs.io/en/master/user/install-deps.html#windows).
-
-----
-## Usage
+Or, if the above entrypoint isn't installed:
 ```bash
 python -m carbon_cli "CHEMICAL NAME" MASS_IN_GRAMS
-# Or, interactive mode:
-python -m carbon_cli
 ```
 
-## File Structure
-```
-carbon_cli/
-  __main__.py        # CLI/Entrypoint
-  normalize.py       # Name normalization helpers
-  utils.py           # Misc utilities
-  schema.py          # EmissionFactor schema
-  sources/
-    dataset.py       # Loads local CSV referenced dataset
-  data/
-    emission_factors.csv  # Referenced chemical emission factors
-```
+## Features
+- Uses only open-access, highly referenced LCA data or published industry factors—NO estimates, no unverifiable values.
+- All output includes complete provenance (source, DOI/URL, year, process, boundary, table if available).
+- Fast, minimal dependencies. Cross-platform (uses `pathlib`).
+- Built-in PDF/online extraction (if Ghostscript/Poppler/Camelot installed).
+
+## Adding/Updating Data
+1. Only add a value if it has a clear, open-access source (government LCA db, peer-reviewed paper, or industry PDF with citation).
+2. Add a new row to `carbon_cli/data/emission_factors.csv`.
+   - See the file for schema (substance, factor/unit/process/source/year/URL/DOI/...)
+3. DO NOT add unverifiable values.
+   - If you can’t find a value, leave the dataset empty or clearly note `no open, citable value available` in the CSV.
+
+## PDF Table Extraction (Windows requirements)
+- If you want PDF table scraping (OA extraction), you **must** install:
+  - [Ghostscript](https://www.ghostscript.com/download/gsdnld.html)
+  - [Poppler for Windows](https://github.com/oschwartz10612/poppler-windows/releases/)
+  - Add both to your PATH.
+- For full directions see the [Camelot install guide](https://camelot-py.readthedocs.io/en/master/user/install-deps.html#windows).
 
 ## Troubleshooting
-- **Why only these sources?** Only referenced sources (LCA literature, official databases, published industry numbers) are accepted for transparency and scientific quality.
-- **CLI or import errors?**
-    - Double-check your virtual environment is activated, and that you installed dependencies using `uv`, `poetry`, or `pip` as above.
-    - On Windows, if PDF extraction fails, check your Ghostscript and Poppler install.
-    - For dependency details, see pyproject.toml and requirements.txt: both are minimal and hand-curated (no "pip freeze").
-- **Contribute new values:** Add referenced EFs (with source, year, system boundary, provenance) to the CSV.
+- Problems running? Make sure your environment is activated and dependencies installed (see above).
+- PDF extraction errors? Double-check that Ghostscript and Poppler are installed & in your PATH on Windows.
+- Only minimal dependencies used (see `pyproject.toml/requirements.txt`).
 
 ## License
 MIT
 
 ---
-## Developer Notes
-- Implements strict referenced-data-only workflow.
-- To add new factors, edit `data/emission_factors.csv`.
-- See comments in dataset.py and schema.py for expected schema and field mapping.
-
----
-### Suggested dataset-building workflow
-- Manual: Find papers/databases → extract EF, process, year, reference → add as row
-- Optional automation: Search Google Scholar API for [chemical name + "life cycle assessment"], download PDFs, use PDF table extraction (pdfplumber/camelot/pandas), and validate. Only add values if provenance is clear.
-
----
+**No sodium chloride emission factors available:** As of this release, no open, citable cradle-to-gate value was found in any global government or open LCA database; the local dataset is empty until such a value is located.
