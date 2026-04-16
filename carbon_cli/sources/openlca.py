@@ -35,50 +35,63 @@ def get_openlca_factor(substance: str) -> Tuple[Optional[EmissionFactor], str]:
         # Find candidate records (look for 'Life Cycle Inventory' or similar, take best match)
         cards = soup.select('a[href^="/record/"]')
         debug = []
+        found_robust = None
+        found_robust_log = None
+
         for card in cards:
             href = card.get("href")
             text = card.text.lower()
             debug.append(f"Found card: {text.strip()}")
-            # Prefer records with 'inventory', 'manufacture', or exact string match
-            if any(x in text for x in [norm, "inventory", "manufacture", "production"]):
-                # Step 2: Fetch details
-                detail_url = f"https://nexus.openlca.org{href}"
-                r2 = s.get(detail_url)
-                if r2.status_code != 200:
-                    debug.append(f"Failed to fetch details: {r2.status_code}")
-                    continue
-                detail = BeautifulSoup(r2.text, "html.parser")
-                # Parse emission factor: look in tables for row with 'kg CO2', 'kgCO2e', etc. per kg
-                factor, unit = None, None
-                found_factor_row = None
-                for row in detail.find_all("tr"):
-                    cols = [c.text.strip() for c in row.find_all("td")]
-                    s_row = " | ".join(cols)
-                    if len(cols) >= 2 and any(
-                        u.replace(" ", "").lower() in cols[1].replace(" ", "").lower()
-                        for u in UNIT_WHITELIST
-                    ):
-                        try:
-                            factor = float(cols[0])
-                            unit = cols[1]
-                            found_factor_row = s_row
-                            break
-                        except Exception as e:
-                            debug.append(f"Failed parsing factor from: {s_row}: {e}")
-                if factor and unit:
-                    ef = EmissionFactor(
-                        substance=norm,
-                        factor=factor,
-                        unit="kg_co2e_per_kg",
-                        source="openlca",
-                        source_url=detail_url,
-                    )
-                    return (
-                        ef,
-                        f"Success: from detail page unit '{unit}'. Row: {found_factor_row}. {debug}",
-                    )
-                else:
-                    debug.append(f"No usable factor found in details")
+            # Prefer records with 'inventory', 'manufacture', or exact/substring match
+            preferred = any(
+                x in text for x in [norm, "inventory", "manufacture", "production"]
+            )
+            detail_url = f"https://nexus.openlca.org{href}"
+            r2 = s.get(detail_url)
+            if r2.status_code != 200:
+                debug.append(f"Failed to fetch details: {r2.status_code}")
+                continue
+            detail = BeautifulSoup(r2.text, "html.parser")
+            factor, unit = None, None
+            found_factor_row = None
+            for row in detail.find_all("tr"):
+                cols = [c.text.strip() for c in row.find_all("td")]
+                s_row = " | ".join(cols)
+                if len(cols) >= 2 and any(
+                    u.replace(" ", "").lower() in cols[1].replace(" ", "").lower()
+                    for u in UNIT_WHITELIST
+                ):
+                    try:
+                        fval = float(cols[0])
+                        uval = cols[1]
+                        if preferred and not found_robust:
+                            # Return first preferred match immediately
+                            ef = EmissionFactor(
+                                substance=norm,
+                                factor=fval,
+                                unit="kg_co2e_per_kg",
+                                source="openlca",
+                                source_url=detail_url,
+                            )
+                            return (
+                                ef,
+                                f"Preferred match (reason: '{text.strip()}'): {s_row}. {debug}",
+                            )
+                        # Keep first fallback for post-loop fallback
+                        if not found_robust:
+                            found_robust = EmissionFactor(
+                                substance=norm,
+                                factor=fval,
+                                unit="kg_co2e_per_kg",
+                                source="openlca",
+                                source_url=detail_url,
+                            )
+                            found_robust_log = f"Fallback robust match from card '{text.strip()}': {s_row}"
+                    except Exception as e:
+                        debug.append(f"Failed parsing factor from: {s_row}: {e}")
+            # ... keep looping to find possible preferred first, fallback after
+        if found_robust:
+            return found_robust, found_robust_log + f". Full scan info: {debug}"
         return None, f"OpenLCA: No usable match for '{norm}'. Debug: {debug}"
     except Exception as e:
         return None, f"OpenLCA: Error {e}"
