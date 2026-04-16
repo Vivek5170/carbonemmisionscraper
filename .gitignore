@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+dist/
+build/
+.venv/
+
+# Packaging
+*.egg-info/
+
+# VSCode + system junk
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Test/coverage
+.pytest_cache/
+.coverage
+
+# Local data/cache/output
+carbon_cli_cache/
+*.sqlite3
+*.db
+
+# OS
+*.swp
+*~
+
+# Misc
+!.gitignore
