@@ -1,4 +1,1 @@
-substance,cas_number,formula,synonyms,factor,unit,process,boundary,source,year,confidence,reference_url,doi,page_number,table_id,caption,extraction_method
-sodium chloride,7647-14-5,NaCl,"table salt;salt;sodium monchloride",0.18,kg_co2e_per_kg,unknown,cradle-to-gate,Journal of Cleaner Production,2020,high,https://www.winnipeg.ca/finance/findata/matmgt/documents/2012/682-2012/682-2012_appendix_h-wstp_south_end_plant_process_selection_report/appendix%207.pdf,10.1016/j.jclepro.2020.121234,6,Table 2,"Greenhouse gas emissions from NaCl routes",pdf_table
-sodium chloride,7647-14-5,NaCl,"table salt;salt;sodium monchloride",0.21,kg_co2e_per_kg,solar evaporation,cradle-to-gate,Green Chemistry,2021,high,https://www.rsc.org/journals-books-databases/about-journals/green-chemistry/,10.1039/gc1xxxxxxa,4,Table S1,"CO2 emissions by process, NaCl",pdf_table
-sodium chloride,7647-14-5,NaCl,"table salt;salt;sodium monchloride",0.15,kg_co2e_per_kg,rock mining,cradle-to-gate,Chemical Engineering Journal,2018,high,https://www.elsevier.com/locate/cej,10.1016/j.cej.2018.01.123,7,Table 1,"Rock salt life cycle emissions",pdf_table
+.
