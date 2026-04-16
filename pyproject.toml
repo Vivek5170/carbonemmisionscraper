@@ -1,0 +1,22 @@
+[project]
+name = "carbon-emission-scraper"
+version = "0.1.0"
+description = "Cross-platform CLI for standardized carbon emission factor calculation, PDF/dataset extraction."
+authors = [ { name = "Your Name", email = "your@email.com" } ]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "camelot-py[cv] >= 1.0.9",
+    "pandas >= 1.4",
+    "rich >= 13",
+    "httpx >= 0.23",
+    "pdfminer.six >= 20201018",
+    "PyPDF2 >= 3.0",
+    "pydantic >= 2.0",
+    "typer >= 0.7"
+]
+
+[build-system]
+requires = ["setuptools >= 42", "wheel"]
+build-backend = "setuptools.build_meta"

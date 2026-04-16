@@ -1,0 +1,15 @@
+README.md
+pyproject.toml
+carbon_cli/__main__.py
+carbon_cli/normalize.py
+carbon_cli/pubchem.py
+carbon_cli/schema.py
+carbon_cli/utils.py
+carbon_cli/sources/dataset.py
+carbon_cli/sources/find_online.py
+carbon_cli/utils/cache.py
+carbon_emission_scraper.egg-info/PKG-INFO
+carbon_emission_scraper.egg-info/SOURCES.txt
+carbon_emission_scraper.egg-info/dependency_links.txt
+carbon_emission_scraper.egg-info/requires.txt
+carbon_emission_scraper.egg-info/top_level.txt

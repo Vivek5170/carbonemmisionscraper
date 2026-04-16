@@ -1,3 +1,20 @@
+Metadata-Version: 2.4
+Name: carbon-emission-scraper
+Version: 0.1.0
+Summary: Cross-platform CLI for standardized carbon emission factor calculation, PDF/dataset extraction.
+Author-email: Your Name <your@email.com>
+License-Expression: MIT
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: camelot-py[cv]>=1.0.9
+Requires-Dist: pandas>=1.4
+Requires-Dist: rich>=13
+Requires-Dist: httpx>=0.23
+Requires-Dist: pdfminer.six>=20201018
+Requires-Dist: PyPDF2>=3.0
+Requires-Dist: pydantic>=2.0
+Requires-Dist: typer>=0.7
+
 # carbon-cli
 
 Estimate embedded CO₂e from chemical manufacturing, referencing the best available published emission factors.
