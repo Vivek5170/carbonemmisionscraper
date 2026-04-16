@@ -17,6 +17,9 @@ dependencies = [
     "typer >= 0.7"
 ]
 
+[project.scripts]
+carbon-cli = "carbon_cli.__main__:app"
+
 [build-system]
 requires = ["setuptools >= 42", "wheel"]
 build-backend = "setuptools.build_meta"
