@@ -1,0 +1,4 @@
+substance,factor,unit,source,source_url
+sodium azide,7.6,kg_co2e_per_kg,dataset,https://dataset.example.com/sodium_azide
+sodium chloride,1.2,kg_co2e_per_kg,dataset,https://dataset.example.com/sodium_chloride
+hydrochloric acid,2.6,kg_co2e_per_kg,dataset,https://dataset.example.com/hydrochloric_acid
